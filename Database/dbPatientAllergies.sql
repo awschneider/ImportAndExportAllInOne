@@ -272,278 +272,353 @@ GO
 -- ----------------------------------------------------------------------
 -- Views
 -- ----------------------------------------------------------------------
-
+ 
  -- --------------------------------------------------------------------------------
- -- Name: VSmokers
- -- Abstract: Shows all the patients that are Smokers
+ -- IMPORT
  -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VSmokers
-AS
- SELECT 
-	 TP.intPatientID	AS intPatientID
-	,TP.strFirstName	AS strTeam
-	,TP.strLastName		AS strLastName
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VSmokers
+	 -- Abstract: Shows all the patients that are Smokers
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VSmokers
+	AS
+	 SELECT 
+		 TP.intPatientID	AS intPatientID
+		,TP.strFirstName	AS strTeam
+		,TP.strLastName		AS strLastName
 	
- FROM 
-	TPatients			AS TP
+	 FROM 
+		TPatients			AS TP
  
- WHERE 
-	TP.blnSmoker = 1
-GO
+	 WHERE 
+		TP.blnSmoker = 1
+	GO
 
 
 
- -- --------------------------------------------------------------------------------
- -- Name: VNonSmokers
- -- Abstract: Shows all the patients that are Not Smokers
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VNonSmokers
-AS
- SELECT 
-	 TP.intPatientID	AS intPatientID
-	,TP.strFirstName	AS strTeam
-	,TP.strLastName		AS strLastName
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VNonSmokers
+	 -- Abstract: Shows all the patients that are Not Smokers
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VNonSmokers
+	AS
+	 SELECT 
+		 TP.intPatientID	AS intPatientID
+		,TP.strFirstName	AS strTeam
+		,TP.strLastName		AS strLastName
 	
- FROM 
-	TPatients			AS TP
+	 FROM 
+		TPatients			AS TP
  
- WHERE 
-	TP.blnSmoker = 0
-GO
+	 WHERE 
+		TP.blnSmoker = 0
+	GO
 
 
 
- -- --------------------------------------------------------------------------------
- -- Name: VHeadOfHouseHold
- -- Abstract: Shows all the patients that are Head Of Household
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VHeadOfHouseHold
-AS
- SELECT 
-	 TP.intPatientID	AS intPatientID
-	,TP.strFirstName	AS strTeam
-	,TP.strLastName		AS strLastName
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VHeadOfHouseHold
+	 -- Abstract: Shows all the patients that are Head Of Household
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VHeadOfHouseHold
+	AS
+	 SELECT 
+		 TP.intPatientID	AS intPatientID
+		,TP.strFirstName	AS strTeam
+		,TP.strLastName		AS strLastName
 	
- FROM 
-	TPatients			AS TP
+	 FROM 
+		TPatients			AS TP
  
- WHERE 
-	TP.blnHeadOfHousehold = 1
-GO
+	 WHERE 
+		TP.blnHeadOfHousehold = 1
+	GO
 
 
 
- -- --------------------------------------------------------------------------------
- -- Name: VNotHeadOfHouseHold
- -- Abstract: Shows all the patients that are Not Head Of Household
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VNotHeadOfHouseHold
-AS
- SELECT 
-	 TP.intPatientID	AS intPatientID
-	,TP.strFirstName	AS strTeam
-	,TP.strLastName		AS strLastName
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VNotHeadOfHouseHold
+	 -- Abstract: Shows all the patients that are Not Head Of Household
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VNotHeadOfHouseHold
+	AS
+	 SELECT 
+		 TP.intPatientID	AS intPatientID
+		,TP.strFirstName	AS strTeam
+		,TP.strLastName		AS strLastName
  
- FROM 
-	TPatients			AS TP
+	 FROM 
+		TPatients			AS TP
  
- WHERE 
-	TP.blnHeadOfHousehold = 0
-GO
+	 WHERE 
+		TP.blnHeadOfHousehold = 0
+	GO
 
- -- --------------------------------------------------------------------------------
- -- Name: VPatientsData
- -- Abstract: Shows all the patient Data
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientsData
-AS
-	SELECT
-		 TP.intPatientID + ';' +
-		 TP.strLastName + ',' + TP.strFirstName + ' ' + TP.strMiddleName + ';' +
-		 TP.strStreetAddress + ';' +
-		 TP.strCity + ';' +
-		 TS.strState + ';' +
-		 TP.strZipcode + ';' +
-		 TP.strPrimaryPhoneNumber + ';' +
-		 TP.strSecondaryPhoneNumber + ';' +
-		 TP.blnSmoker + ';' +
-		 TP.decPackYears + ';' +
-		 TP.blnHeadOfHousehold + ';' +
-		 TP.dtmDateOfBirth + ';' +
-		 TG.strSex + ';' +
-		 TP.strEmailAddress + ';' +
-		 TR.strFullName	+ ';' AS strTheWholeRecordDu
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientsData
+	 -- Abstract: Shows all the Export patient Data
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientsData
+	AS
+		SELECT
+			 TP.intPatientID
+			,TP.strLastName + ', ' + TP.strFirstName + ' ' + TP.strMiddleName AS strPatientFullName
+			,TP.strStreetAddress
+			,TP.strCity
+			,TS.strState
+			,TP.strZipcode
+			,TP.strPrimaryPhoneNumber
+			,TP.strSecondaryPhoneNumber
+			,TP.blnSmoker
+			,TP.decPackYears
+			,TP.blnHeadOfHousehold
+			,TP.dtmDateOfBirth
+			,TG.strSex
+			,TP.strEmailAddress
+			,TR.strFullName			AS strRecordCreator
 
-	FROM 
-		TPatients AS TP
-			INNER JOIN TStates AS TS
-				ON (TP.intStateID = TS.intStateID)
-			INNER JOIN TSexes AS TG
-				ON (TP.intSexID = TG.intSexID)
-			INNER JOIN TRecordCreators AS TR
-				ON (TP.intRecordCreatorID = TR.intRecordCreatorID)
-GO
-
- -- --------------------------------------------------------------------------------
- -- Name: VPatientsExportData
- -- Abstract: Shows all the Export patient Data
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientsExportData
-AS
-	SELECT
-			TP.intPatientID
-		,TP.strLastName + ', ' + TP.strFirstName + ' ' + TP.strMiddleName AS strPatientFullName
-		,TP.strStreetAddress
-		,TP.strCity
-		,TS.strState
-		,TP.strZipcode
-		,TP.strPrimaryPhoneNumber
-		,TP.strSecondaryPhoneNumber
-		,TP.blnSmoker
-		,TP.decPackYears
-		,TP.blnHeadOfHousehold
-		,TP.dtmDateOfBirth
-		,TG.strSex
-		,TP.strEmailAddress
-		,TR.strFullName			AS strRecordCreator
-
-	FROM 
-		TPatients AS TP
-			INNER JOIN TStates AS TS
-				ON (TP.intStateID = TS.intStateID)
-			INNER JOIN TSexes AS TG
-				ON (TP.intSexID = TG.intSexID)
-			INNER JOIN TRecordCreators AS TR
-				ON (TP.intRecordCreatorID = TR.intRecordCreatorID)
-GO
+		FROM 
+			TPatients AS TP
+				INNER JOIN TStates AS TS
+					ON (TP.intStateID = TS.intStateID)
+				INNER JOIN TSexes AS TG
+					ON (TP.intSexID = TG.intSexID)
+				INNER JOIN TRecordCreators AS TR
+					ON (TP.intRecordCreatorID = TR.intRecordCreatorID)
+	GO
 
 
 
- -- --------------------------------------------------------------------------------
- -- Name: VPatientAllergysData
- -- Abstract: Shows all the patient Allergys
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientAllergysData
-AS
-	SELECT
-	 TP.intPatientID
-	,TA.strAllergy
-
-	FROM
-	TPatients AS TP
-		FULL OUTER JOIN TPatientAllergies AS TPA
-			INNER JOIN TAllergies AS TA
-			ON (TA.intAllergyID = TPA.intAllergyID)
-		ON (TPA.intPatientID = TP.intPatientID)
-GO
-
-
-
- -- --------------------------------------------------------------------------------
- -- Name: VPatientAllergyMedicationsData
- -- Abstract: Shows all the patient Allergy Medication Data
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientAllergyMedicationsData 
-AS
-	SELECT
-	 TP.intPatientID
-	,TA.intAllergyID
-	,TM.strMedication
-
-
-	FROM
-	TPatients AS TP
-		FULL OUTER JOIN TPatientAllergyMedications AS TPAM
-			INNER JOIN TMedications AS TM
-				ON (TPAM.intMedicationID = TM.intMedicationID)
-				INNER JOIN TPatientAllergies AS TPA
-					INNER JOIN TAllergies AS TA
-					ON (TA.intAllergyID = TPA.intAllergyID)
-				ON (TPA.intPatientID = TPAM.intPatientID
-				AND TPA.intAllergyID = TPAM.intAllergyID)
-			ON (TPAM.intPatientID = TP.intPatientID)
-GO
-
-
-
-
- -- --------------------------------------------------------------------------------
- -- Name: VPatientConditions
- -- Abstract: Shows all the patient Conditions
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientConditionsData
-AS
-	SELECT
-	 TP.intPatientID
-	,TC.strCondition
-
-	FROM
-	TPatients AS TP
-		FULL OUTER JOIN TPatientConditions AS TPC
-			INNER JOIN TConditions AS TC
-			ON (TC.intConditionID = TPC.intConditionID)
-		ON (TPC.intPatientID = TP.intPatientID)
-GO
-
-
-
-
- -- --------------------------------------------------------------------------------
- -- Name: VPatientConditionMedicationsData
- -- Abstract: Shows all the patient Condition Medication Data
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientConditionMedicationsData
-AS
-	-- PatientCondition
-	SELECT
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientAllergysData
+	 -- Abstract: Shows all the patient Allergys
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientAllergysData
+	AS
+		SELECT
 		 TP.intPatientID
-		,TC.intConditionID
+		,TA.strAllergy
+
+		FROM
+		TPatients AS TP
+			FULL OUTER JOIN TPatientAllergies AS TPA
+				INNER JOIN TAllergies AS TA
+				ON (TA.intAllergyID = TPA.intAllergyID)
+			ON (TPA.intPatientID = TP.intPatientID)
+	GO
+
+	select * from VPatientAllergyMedicationsExportData
+
+	-- -- --------------------------------------------------------------------------------
+	-- -- Name: VPatientAllergyMedicationsData
+	-- -- Abstract: Shows all the patient Allergy Medication Data
+	-- -- --------------------------------------------------------------------------------
+	--GO
+	--CREATE VIEW VPatientAllergyMedicationsExportData 
+	--AS
+	--	SELECT
+	--	 TP.intPatientID,
+	--	 TA.strAllergy +';'+
+	--	 CAST(TA.intAllergyID AS VARCHAR(50)) +';'+
+	--	 TM.strMedication +';' AS PatientAllergyMedsExportData
+
+
+	--	FROM
+	--	TPatients AS TP
+	--		FULL OUTER JOIN TPatientAllergyMedications AS TPAM
+	--			INNER JOIN TMedications AS TM
+	--				ON (TPAM.intMedicationID = TM.intMedicationID)
+	--				INNER JOIN TPatientAllergies AS TPA
+	--					INNER JOIN TAllergies AS TA
+	--					ON (TA.intAllergyID = TPA.intAllergyID)
+	--				ON (TPA.intPatientID = TPAM.intPatientID
+	--				AND TPA.intAllergyID = TPAM.intAllergyID)
+	--			ON (TPAM.intPatientID = TP.intPatientID)
+	--GO
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientAllergyMedicationsData
+	 -- Abstract: Shows all the patient Allergy Medication Data
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientAllergyMedicationsData 
+	AS
+		SELECT
+		 TP.intPatientID
+		,TA.intAllergyID
 		,TM.strMedication
 
-	FROM
+
+		FROM
 		TPatients AS TP
-			FULL OUTER JOIN TPatientConditionMedications AS TPCM
+			FULL OUTER JOIN TPatientAllergyMedications AS TPAM
 				INNER JOIN TMedications AS TM
-					ON (TPCM.intMedicationID = TM.intMedicationID)
-				INNER JOIN TPatientConditions AS TPC
-					INNER JOIN TConditions AS TC
-						ON (TC.intConditionID = TPC.intConditionID)
-					ON (TPC.intPatientID = TPCM.intPatientID
-					AND TPC.intConditionID = TPCM.intConditionID)
-				ON (TPCM.intPatientID = TP.intPatientID)
-GO
+					ON (TPAM.intMedicationID = TM.intMedicationID)
+					INNER JOIN TPatientAllergies AS TPA
+						INNER JOIN TAllergies AS TA
+						ON (TA.intAllergyID = TPA.intAllergyID)
+					ON (TPA.intPatientID = TPAM.intPatientID
+					AND TPA.intAllergyID = TPAM.intAllergyID)
+				ON (TPAM.intPatientID = TP.intPatientID)
+	GO
 
 
-
- -- --------------------------------------------------------------------------------
- -- Name: VPatientProceduresData
- -- Abstract: Shows all the patient procedures Data
- -- --------------------------------------------------------------------------------
-GO
-CREATE VIEW VPatientProceduresData
-AS
-	-- PatientProcedure
-	SELECT
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientConditions
+	 -- Abstract: Shows all the patient Conditions
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientConditionsData
+	AS
+		SELECT
 		 TP.intPatientID
-		,TPr.strProcedure
-	FROM
-		TPatients as TP
-			FULL OUTER JOIN TPatientProcedures AS TPP
-				INNER JOIN TProcedures AS TPr
-				ON (TPP.intProcedureID = TPr.intProcedureID)
-			ON (TPP.intPatientID = TP.intPatientID)	
-GO	
+		,TC.strCondition
 
+		FROM
+		TPatients AS TP
+			FULL OUTER JOIN TPatientConditions AS TPC
+				INNER JOIN TConditions AS TC
+				ON (TC.intConditionID = TPC.intConditionID)
+			ON (TPC.intPatientID = TP.intPatientID)
+	GO
+
+
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientConditionMedicationsData
+	 -- Abstract: Shows all the patient Condition Medication Data
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientConditionMedicationsData
+	AS
+		-- PatientCondition
+		SELECT
+			 TP.intPatientID
+			,TC.intConditionID
+			,TM.strMedication
+
+		FROM
+			TPatients AS TP
+				FULL OUTER JOIN TPatientConditionMedications AS TPCM
+					INNER JOIN TMedications AS TM
+						ON (TPCM.intMedicationID = TM.intMedicationID)
+					INNER JOIN TPatientConditions AS TPC
+						INNER JOIN TConditions AS TC
+							ON (TC.intConditionID = TPC.intConditionID)
+						ON (TPC.intPatientID = TPCM.intPatientID
+						AND TPC.intConditionID = TPCM.intConditionID)
+					ON (TPCM.intPatientID = TP.intPatientID)
+	GO
+
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientProceduresData
+	 -- Abstract: Shows all the patient procedures Data
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientProceduresData
+	AS
+		-- PatientProcedure
+		SELECT
+			 TP.intPatientID
+			,TPr.strProcedure
+		FROM
+			TPatients as TP
+				FULL OUTER JOIN TPatientProcedures AS TPP
+					INNER JOIN TProcedures AS TPr
+					ON (TPP.intProcedureID = TPr.intProcedureID)
+				ON (TPP.intPatientID = TP.intPatientID)	
+	GO	
+GO
+
+
+
+
+
+ -- --------------------------------------------------------------------------------
+ -- EXPORT
+ -- --------------------------------------------------------------------------------
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientsExportData
+	 -- Abstract: Shows all the patient Data
+	 -- --------------------------------------------------------------------------------
+	GO
+	CREATE VIEW VPatientsExportData
+	AS
+		SELECT
+			 CAST(TP.intPatientID AS VARCHAR(50)) + ';' +
+			 TP.strLastName + ',' + TP.strFirstName + ' ' + TP.strMiddleName + ';' +
+			 TP.strStreetAddress + ';' +
+			 TP.strCity + ';' +
+			 TS.strState + ';' +
+			 TP.strZipcode + ';' +
+			 TP.strPrimaryPhoneNumber + ';' +
+			 TP.strSecondaryPhoneNumber + ';' +
+			 CAST(TP.blnSmoker AS VARCHAR(50))+ ';' +
+			 CAST(TP.decPackYears AS VARCHAR(50))+ ';' +
+			 CAST(TP.blnHeadOfHousehold AS VARCHAR(50)) + ';' +
+			 CAST(CAST(TP.dtmDateOfBirth AS DATE) AS VARCHAR(50)) + ';' + -- Leet HAXZOR5
+			 TG.strSex + ';' +
+			 TP.strEmailAddress + ';' +
+			 TR.strFullName	+ ';' AS strTheWholeRecordDu
+
+		FROM 
+			TPatients AS TP
+				INNER JOIN TStates AS TS
+					ON (TP.intStateID = TS.intStateID)
+				INNER JOIN TSexes AS TG
+					ON (TP.intSexID = TG.intSexID)
+				INNER JOIN TRecordCreators AS TR
+					ON (TP.intRecordCreatorID = TR.intRecordCreatorID)
+	GO
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientAllergyCount
+	 -- Abstract: Gets a Count of each patients Allergies
+	 -- --------------------------------------------------------------------------------
+	 GO
+	 CREATE VIEW VPatientAllergyCount
+	 AS
+	 	 SELECT
+			 vPA.intPatientID,
+			 COUNT(vPA.strAllergy) AS intAllergyCount
+			
+		 FROM	
+			 VPatientAllergysData AS vPA
+
+		 GROUP BY 
+			 vPA.intPatientID
+	 GO
+
+	 SELECT * FROM VPatientAllergyMedicationCount
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientAllergyMedicationCount
+	 -- Abstract: Gets a Count of each patients Allergies
+	 -- --------------------------------------------------------------------------------
+	 GO
+	 CREATE VIEW VPatientAllergyMedicationCount
+	 AS
+	 	 SELECT
+			 vPAM.intPatientID,
+			 ISNULL(vPAM.intAllergyID, 0) AS intAllergyID, 
+			 COUNT(vPAM.strMedication) AS intMedicationCountCount
+			
+		 FROM	
+			 VPatientAllergyMedicationsData AS vPAM
+
+		 GROUP BY 
+			 vPAM.intPatientID,
+			 vPAM.intAllergyID
+	 GO
 -- ----------------------------------------------------------------------
 -- Functions
 -- ----------------------------------------------------------------------
@@ -1133,6 +1208,7 @@ VALUES
 		,(58, 'Puerto Rico',	'PR')
 		,(59, 'Virgin Islands',	'VI')
 		
+		SELECT * FROM VPatientsExportData
 --GO
 --CREATE VIEW VPatientPlusAllergyData
 --AS
