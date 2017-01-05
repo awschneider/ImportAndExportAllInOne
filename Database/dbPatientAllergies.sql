@@ -599,7 +599,6 @@ GO
 			 vPA.intPatientID
 	 GO
 
-	 SELECT * FROM VPatientAllergyMedicationCount
 	 -- --------------------------------------------------------------------------------
 	 -- Name: VPatientAllergyMedicationCount
 	 -- Abstract: Gets a Count of each patients Allergies
@@ -618,6 +617,66 @@ GO
 		 GROUP BY 
 			 vPAM.intPatientID,
 			 vPAM.intAllergyID
+	 GO
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientConditionCount
+	 -- Abstract: Gets a Count of each patients Conditions
+	 -- --------------------------------------------------------------------------------
+	 GO
+	 CREATE VIEW VPatientConditionCount
+	 AS
+	 	 SELECT
+			 vPC.intPatientID,
+			 COUNT(vPC.strCondition) AS intConditionCount
+			
+		 FROM	
+			 VPatientConditionsData AS vPC
+
+		 GROUP BY 
+			 vPC.intPatientID
+	 GO
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientAllergyMedicationCount
+	 -- Abstract: Gets a Count of each patients Condition medications
+	 -- --------------------------------------------------------------------------------
+	 GO
+	 CREATE VIEW VPatientConditionMedicationCount
+	 AS
+	 	 SELECT
+			 vPCM.intPatientID,
+			 ISNULL(vPCM.intConditionID, 0) AS intConditionID, 
+			 COUNT(vPCM.strMedication) AS intMedicationCountCount
+			
+		 FROM	
+			 VPatientConditionMedicationsData AS vPCM
+
+		 GROUP BY 
+			 vPCM.intPatientID,
+			 vPCM.intConditionID
+	 GO
+
+
+
+	 -- --------------------------------------------------------------------------------
+	 -- Name: VPatientConditionCount
+	 -- Abstract: Gets a Count of each patients Conditions
+	 -- --------------------------------------------------------------------------------
+	 GO
+	 CREATE VIEW VPatientConditionCount
+	 AS
+	 	 SELECT
+			 vPC.intPatientID,
+			 COUNT(vPC.strCondition) AS intConditionCount
+			
+		 FROM	
+			 VPatientConditionsData AS vPC
+
+		 GROUP BY 
+			 vPC.intPatientID
 	 GO
 -- ----------------------------------------------------------------------
 -- Functions
