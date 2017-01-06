@@ -660,23 +660,22 @@ GO
 	 GO
 
 
-
 	 -- --------------------------------------------------------------------------------
 	 -- Name: VPatientConditionCount
-	 -- Abstract: Gets a Count of each patients Conditions
+	 -- Abstract: Gets a Count of each patients Procedure
 	 -- --------------------------------------------------------------------------------
 	 GO
-	 CREATE VIEW VPatientConditionCount
+	 CREATE VIEW VPatientProcedureCount
 	 AS
 	 	 SELECT
-			 vPC.intPatientID,
-			 COUNT(vPC.strCondition) AS intConditionCount
+			 vPP.intPatientID,
+			 COUNT(vPP.strProcedure) AS intProcedureCount
 			
 		 FROM	
-			 VPatientConditionsData AS vPC
+			 VPatientProceduresData AS vPP
 
 		 GROUP BY 
-			 vPC.intPatientID
+			 vPP.intPatientID
 	 GO
 -- ----------------------------------------------------------------------
 -- Functions
