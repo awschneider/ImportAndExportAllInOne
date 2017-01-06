@@ -20,6 +20,12 @@ namespace nsImportAndExportAllInOne
         // --------------------------------------------------------------------------------
         // Properties
         // --------------------------------------------------------------------------------
+        private static int intRecordCount = 0;
+        private static int[] intRecordAllergyCount;
+        private static int[] intRecordAllergyMedicationCount;
+        private static int[] intRecordConditionCount;
+        private static int[] intRecordConditionMedicationCount;
+        private static string[] strPatientExportData;
 
         private static enuDatabaseTypeType m_enuDatabaseType = enuDatabaseTypeType.SQLServer;
 
@@ -691,7 +697,6 @@ namespace nsImportAndExportAllInOne
 
         #endregion
 
-
         #region "IMPORT"
 
         // --------------------------------------------------------------------------------
@@ -1293,11 +1298,48 @@ namespace nsImportAndExportAllInOne
 
         // --------------------------------------------------------------------------------
         // Name: NumberofRecordsInTable
-        // Absteract: returns the number of records in a particular table
+        // Absteract: returns the number of records in a particular table.
+        // *** SETS THE FORM LEVEL VARIABLE***
         // --------------------------------------------------------------------------------
         public static int NumberofRecordsInTable(string strTable)
         {
-            int intRecordCount = 0;
+
+            try
+            {
+                OleDbCommand cmdSelect = null;
+                OleDbDataReader drSourceTable = null;
+                string strSelect = "SELECT COUNT(*) FROM " + strTable;
+
+                // Execute command
+                cmdSelect = new OleDbCommand(strSelect, m_conAdministrator);
+                drSourceTable = cmdSelect.ExecuteReader();
+
+                // Read result
+                drSourceTable.Read();
+
+                // Was it Valid?
+                if (drSourceTable.HasRows)
+                {
+                    intRecordCount = (int)drSourceTable[0];
+                }
+            }
+            catch (Exception excError)
+            {
+                CUtilities.WriteLog(excError);
+            }
+
+            return intRecordCount;
+        }
+
+
+
+        // --------------------------------------------------------------------------------
+        // Name: NumberofRecordsInTable
+        // Absteract: returns the number of records in a particular table.
+        // *** SETS THE PASSED VARIABLE***
+        // --------------------------------------------------------------------------------
+        public static int NumberofRecordsInTable(string strTable, ref int intRecordCount)
+        {
 
             try
             {
@@ -1332,7 +1374,45 @@ namespace nsImportAndExportAllInOne
         // Name: NumberofRecordsInTable
         // Absteract: returns the number of records in a particular table
         // --------------------------------------------------------------------------------
-        public static void PatientData(ref string[] strDestination)
+        public static int PatientAllergyCount(string strTable)
+        {
+
+            try
+            {
+
+                int intAllergyRecordCount = 0;
+                OleDbCommand cmdSelect = null;
+                OleDbDataReader drSourceTable = null;
+                string strSelect = "SELECT * FROM VPatientAllergyCount";
+
+                // Execute command
+                cmdSelect = new OleDbCommand(strSelect, m_conAdministrator);
+                drSourceTable = cmdSelect.ExecuteReader();
+
+                // Read result
+                drSourceTable.Read();
+
+                // Was it Valid?
+                if (drSourceTable.HasRows)
+                {
+                    intRecordCount = (int)drSourceTable[0];
+                }
+            }
+            catch (Exception excError)
+            {
+                CUtilities.WriteLog(excError);
+            }
+
+            return intRecordCount;
+        }
+
+
+
+        // --------------------------------------------------------------------------------
+        // Name: NumberofRecordsInTable
+        // Absteract: returns the number of records in a particular table
+        // --------------------------------------------------------------------------------
+        public static void PatientData()
         {
 
             try
@@ -1352,9 +1432,9 @@ namespace nsImportAndExportAllInOne
                 // Was it Valid?
                 if (drSourceTable.HasRows)
                 {
-                    for(intIndex = 0; intIndex < 206; intIndex += 1)
+                    for(intIndex = 0; intIndex < intRecordCount - 1; intIndex += 1)
                     {
-                        strDestination[intIndex] = (string)drSourceTable[0];
+                        strPatientExportData[intIndex] = (string)drSourceTable[0];
                         drSourceTable.Read();
                     } 
                 }
